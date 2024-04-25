@@ -2,6 +2,7 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import { usePostContext } from "../../hooks/usePostContext";
 import Loading from "../Loading";
 import { Logo } from "../Logo";
+import PostTable from "../PostTable";
 
 export default function Main() {
   const { isLoading, posts } = usePostContext();
@@ -9,9 +10,10 @@ export default function Main() {
   console.log("posts", posts);
 
   return (
-    <Box height="100%" backgroundColor="gray.50" mt={5}>
+    <Box backgroundColor="gray.50" mt={5} paddingBottom={5}>
       <Flex
         width="100%"
+        align={"center"}
         justify="space-between"
         paddingX={10}
         paddingY={6}
@@ -25,9 +27,9 @@ export default function Main() {
         </Button>
       </Flex>
 
-      <Flex flex={1} direction="column">
-        {isLoading && <Loading />}
-      </Flex>
+      <Box paddingX={10}>
+        {isLoading ? <Loading /> : <PostTable posts={posts} />}
+      </Box>
     </Box>
   );
 }

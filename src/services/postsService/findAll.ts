@@ -1,12 +1,8 @@
 import { Post } from "../../types/Post";
 import { httpClient } from "../httpClient";
 
-interface PostResponse {
-  posts: Post[];
-}
-
 export async function findAll() {
-  const { data } = await httpClient.get<PostResponse>("/posts");
+  const response = await httpClient.get<Post[]>("/posts");
 
-  return data;
+  return response;
 }

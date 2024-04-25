@@ -27,8 +27,9 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function getPosts() {
       try {
-        const postsData = await postsService.findAll();
-        setPosts(postsData.posts);
+        const response = await postsService.findAll();
+
+        setPosts(response.data);
       } catch (error) {
         toast({
           status: "error",
@@ -39,8 +40,10 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    getPosts();
-  }, [toast]);
+    if (!posts.length) {
+      getPosts();
+    }
+  }, [posts.length, toast]);
 
   return (
     <PostContext.Provider value={{ posts, isLoading, addPost }}>
