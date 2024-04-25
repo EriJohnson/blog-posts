@@ -1,11 +1,13 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { usePostContext } from "../../hooks/usePostContext";
 import Loading from "../Loading";
 import { Logo } from "../Logo";
 import PostTable from "../PostTable";
+import { PostDrawer } from "../PostDrawer";
 
 export default function Main() {
   const { isLoading, posts } = usePostContext();
+  const { isOpen, onClose, onToggle } = useDisclosure();
 
   console.log("posts", posts);
 
@@ -22,7 +24,13 @@ export default function Main() {
       >
         <Logo />
 
-        <Button size="sm" colorScheme="primary" w="6.25rem">
+        <Button
+          onClick={onToggle}
+          size="sm"
+          colorScheme="primary"
+          w="6.25rem"
+          fontWeight="medium"
+        >
           Adicionar
         </Button>
       </Flex>
@@ -30,6 +38,8 @@ export default function Main() {
       <Box paddingX={10}>
         {isLoading ? <Loading /> : <PostTable posts={posts} />}
       </Box>
+
+      <PostDrawer isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }
