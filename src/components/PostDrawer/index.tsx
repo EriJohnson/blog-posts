@@ -33,6 +33,11 @@ export function PostDrawer({ isOpen, onClose }: PostDrawerProps) {
     userId: 1,
   });
 
+  function handleClose() {
+    setPost({ title: "", body: "", userId: 1 });
+    onClose();
+  }
+
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -46,11 +51,11 @@ export function PostDrawer({ isOpen, onClose }: PostDrawerProps) {
 
     await addPost(post);
 
-    onClose();
+    handleClose();
   }
 
   return (
-    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="md">
+    <Drawer isOpen={isOpen} placement="right" onClose={handleClose} size="md">
       <DrawerOverlay />
 
       <form onSubmit={handleSubmit}>
@@ -107,7 +112,7 @@ export function PostDrawer({ isOpen, onClose }: PostDrawerProps) {
               size="sm"
               variant="outline"
               mr={3}
-              onClick={onClose}
+              onClick={handleClose}
               colorScheme="gray"
               color="gray.500"
               borderColor="gray.200"

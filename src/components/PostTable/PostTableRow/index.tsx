@@ -1,12 +1,19 @@
 import { Tr, Td } from "@chakra-ui/react";
 import { Post } from "../../../types/Post";
-import DeleteButton from "./DeleteButton";
+import { usePostContext } from "../../../hooks/usePostContext";
+import { DeleteButton } from "./DeleteButton";
 
 interface PostTableRowProps {
   post: Post;
 }
 
 export default function PostTableRow({ post }: PostTableRowProps) {
+  const { deletePost } = usePostContext();
+
+  async function handleDelete() {
+    await deletePost(post.id);
+  }
+
   return (
     <Tr sx={{ td: { height: 10, py: 0 } }}>
       <Td width="1rem" px={4} textAlign="center">
@@ -22,7 +29,7 @@ export default function PostTableRow({ post }: PostTableRowProps) {
       </Td>
 
       <Td width="1rem" px={4} textAlign="center">
-        <DeleteButton />
+        <DeleteButton aria-label="Deletar" onClick={() => handleDelete()} />
       </Td>
     </Tr>
   );

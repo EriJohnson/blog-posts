@@ -1,4 +1,4 @@
-import { Icon, IconProps, IconButton } from "@chakra-ui/react";
+import { Icon, IconProps, IconButton, IconButtonProps } from "@chakra-ui/react";
 
 const TrashIcon = (props: IconProps) => (
   <Icon viewBox="0 0 512 512" {...props}>
@@ -9,13 +9,13 @@ const TrashIcon = (props: IconProps) => (
   </Icon>
 );
 
-export default function DeleteButton() {
+export function DeleteButton({ ...rest }: IconButtonProps) {
   return (
     <IconButton
       variant="ghost"
       size="xs"
-      aria-label="Deletar"
       icon={<TrashIcon color="gray.500" boxSize={5} />}
+      {...rest}
     />
   );
 }

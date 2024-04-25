@@ -9,6 +9,7 @@ interface PostContextType {
   isLoading: boolean;
   isSubmitting: boolean;
   addPost(post: Post): Promise<void>;
+  deletePost(postId: number): Promise<void>;
 }
 
 export const PostContext = createContext<PostContextType>(
@@ -65,11 +66,41 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function deletePost(postId: number) {
+    setIsLoading(true);
+
+    try {
+      await postsService.remove(postId);
+
+      setPosts((prevPosts) =>
+        prevPosts.filter((prevPost) => prevPost.id !== postId)
+      );
+
+      toast({
+        status: "success",
+        description: "Post excluído com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        status: "error",
+        description: "Erro ao excluir post!",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const sortedPosts = sortPosts(posts);
 
   return (
     <PostContext.Provider
-      value={{ posts: sortedPosts, isLoading, isSubmitting, addPost }}
+      value={{
+        posts: sortedPosts,
+        isLoading,
+        isSubmitting,
+        addPost,
+        deletePost,
+      }}
     >
       {children}
     </PostContext.Provider>
