@@ -3,26 +3,23 @@ import { Post } from "../types/Post";
 import { postsService } from "../services/postsService";
 import { useToast } from "@chakra-ui/react";
 
-// Definindo o tipo para o contexto
 interface PostContextType {
   posts: Post[];
   isLoading: boolean;
-  addPost(post: Post): void;
+  isSubmitting: boolean;
+  addPost(post: Post): Promise<void>;
 }
 
 export const PostContext = createContext<PostContextType>(
   {} as PostContextType
 );
 
-// Componente Provider para o contexto de posts
 export function PostProvider({ children }: { children: React.ReactNode }) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function addPost(post: Post) {
-    setPosts([...posts, post]);
-  }
+  const toast = useToast();
 
   useEffect(() => {
     async function getPosts() {
@@ -45,8 +42,30 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     }
   }, [posts.length, toast]);
 
+  async function addPost(post: Post) {
+    setIsSubmitting(true);
+
+    try {
+      const createdPost = await postsService.create(post);
+
+      setPosts([...posts, createdPost]);
+
+      toast({
+        status: "success",
+        description: "Post cadastrado com sucesso!",
+      });
+    } catch (error) {
+      toast({
+        status: "error",
+        description: "Erro ao cadastrar post!",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
-    <PostContext.Provider value={{ posts, isLoading, addPost }}>
+    <PostContext.Provider value={{ posts, isLoading, isSubmitting, addPost }}>
       {children}
     </PostContext.Provider>
   );
