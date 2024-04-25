@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { Post } from "../types/Post";
 import { postsService } from "../services/postsService";
 import { useToast } from "@chakra-ui/react";
+import { sortPosts } from "../utils/sortPosts";
 
 interface PostContextType {
   posts: Post[];
@@ -64,8 +65,12 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const sortedPosts = sortPosts(posts);
+
   return (
-    <PostContext.Provider value={{ posts, isLoading, isSubmitting, addPost }}>
+    <PostContext.Provider
+      value={{ posts: sortedPosts, isLoading, isSubmitting, addPost }}
+    >
       {children}
     </PostContext.Provider>
   );
